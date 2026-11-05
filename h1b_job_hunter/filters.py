@@ -29,20 +29,7 @@ class JobFilterEngine:
     def evaluate(self, job: RawJob) -> FilterResult:
         """Run all filter checks in order of computational efficiency."""
         
-        # 1. Cooldown Registry Check
-        on_cd, cd_reason = self.db.is_company_on_cooldown(job.company)
-        if on_cd:
-            return FilterResult(job=job, is_passed=False, rejection_reason=f"COOLDOWN: {cd_reason}")
-
-        # 2. Duplicate Application Check (URL level)
-        if self.db.is_link_applied_or_discovered(job.url):
-            return FilterResult(job=job, is_passed=False, rejection_reason="DUPLICATE: Link already tracked or discovered")
-
-        # 3. Duplicate Company Check (Company level)
-        if not self.allow_existing_companies and self.db.is_company_applied(job.company):
-            return FilterResult(job=job, is_passed=False, rejection_reason=f"DUPLICATE_COMPANY: Candidate already applied to {job.company}")
-
-        # 4. Title Inclusion Check
+        # 1. Title Inclusion Check (Fastest in-memory check: drops ~90% non-AI roles instantly)
         title_lower = job.title.lower()
         matched_title = None
         for inc in ROLE_INCLUSIONS:
@@ -52,6 +39,19 @@ class JobFilterEngine:
         
         if not matched_title:
             return FilterResult(job=job, is_passed=False, rejection_reason=f"TITLE_NOT_INCLUDED: '{job.title}' does not match target roles")
+
+        # 2. Cooldown Registry Check (In-memory cache lookup)
+        on_cd, cd_reason = self.db.is_company_on_cooldown(job.company)
+        if on_cd:
+            return FilterResult(job=job, is_passed=False, rejection_reason=f"COOLDOWN: {cd_reason}")
+
+        # 3. Duplicate Application Check (URL level, in-memory cache lookup)
+        if self.db.is_link_applied_or_discovered(job.url):
+            return FilterResult(job=job, is_passed=False, rejection_reason="DUPLICATE: Link already tracked or discovered")
+
+        # 4. Duplicate Company Check (Company level, in-memory cache lookup)
+        if not self.allow_existing_companies and self.db.is_company_applied(job.company):
+            return FilterResult(job=job, is_passed=False, rejection_reason=f"DUPLICATE_COMPANY: Candidate already applied to {job.company}")
 
         # 5. Strict Negative: Seniority & Leveling
         for sen in SENIORITY_EXCLUSIONS:

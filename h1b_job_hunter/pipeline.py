@@ -45,7 +45,8 @@ class JobHunterPipeline:
         self,
         target_count: int = 50,
         output_file: Optional[Path] = None,
-        batch_id: Optional[str] = None
+        batch_id: Optional[str] = None,
+        append: bool = False
     ) -> tuple[List[EvaluatedJob], RunMetrics, Path]:
         """Execute full pipeline run."""
         metrics = RunMetrics()
@@ -171,11 +172,11 @@ class JobHunterPipeline:
                     if len(evaluated) >= target_count:
                         break
 
-        # Stage 3: If target count is not yet reached, fill progressively (up to 5, 7, 10, then 15 roles per company)
+        # Stage 3: If target count is not yet reached, fill progressively (up to 5, 7, 10, 15, then 20 roles per company)
         # to guarantee the full target verified roles while strictly preventing single-company flooding
         if len(evaluated) < target_count:
             all_remaining = unapplied_jobs + (applied_company_jobs if self.allow_existing_companies else [])
-            for cap_limit in (5, 7, 10, 15):
+            for cap_limit in (5, 7, 10, 15, 20):
                 for j in all_remaining:
                     if j.url not in [e.job_posting_link for e in evaluated]:
                         c_norm = normalize_company_name(j.company)
@@ -196,8 +197,9 @@ class JobHunterPipeline:
         else:
             target_path = Path(output_file)
 
-        print(f"[6/6] Exporting {len(evaluated)} evaluated roles to Excel ({target_path.name})...", flush=True)
-        ExcelExporter.export(evaluated, target_path)
+        action_verb = "Appending" if append else "Exporting"
+        print(f"[6/6] {action_verb} {len(evaluated)} evaluated roles to Excel ({target_path.name})...", flush=True)
+        ExcelExporter.export(evaluated, target_path, append=append)
         metrics.exported_jobs = len(evaluated)
 
         # 7. Record in SQLite discovered_jobs

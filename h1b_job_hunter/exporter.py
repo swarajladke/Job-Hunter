@@ -13,14 +13,10 @@ class ExcelExporter:
     """Exports evaluated job postings into formatted Excel sheets."""
 
     @staticmethod
-    def export(jobs: List[EvaluatedJob], output_path: Path) -> Path:
-        """Create formatted .xlsx workbook with exact 15-column schema."""
+    def export(jobs: List[EvaluatedJob], output_path: Path, append: bool = False) -> Path:
+        """Create or append to formatted .xlsx workbook with exact 15-column schema."""
         output_path = Path(output_path)
         output_path.parent.mkdir(parents=True, exist_ok=True)
-
-        wb = openpyxl.Workbook()
-        ws = wb.active
-        ws.title = "Applications"
 
         # Define Styles
         header_font = Font(name="Calibri", size=11, bold=True, color="FFFFFF")
@@ -39,17 +35,29 @@ class ExcelExporter:
             bottom=Side(style="thin", color="D9D9D9")
         )
 
-        # Write Headers
-        ws.row_dimensions[1].height = 28
-        for col_idx, col_name in enumerate(EXCEL_COLUMNS, start=1):
-            cell = ws.cell(row=1, column=col_idx, value=col_name)
-            cell.font = header_font
-            cell.fill = header_fill
-            cell.alignment = header_align
-            cell.border = thin_border
+        if append and output_path.exists():
+            wb = openpyxl.load_workbook(output_path)
+            ws = wb["Applications"] if "Applications" in wb.sheetnames else wb.active
+            start_row = ws.max_row + 1
+        else:
+            wb = openpyxl.Workbook()
+            ws = wb.active
+            ws.title = "Applications"
+
+            # Write Headers
+            ws.row_dimensions[1].height = 28
+            for col_idx, col_name in enumerate(EXCEL_COLUMNS, start=1):
+                cell = ws.cell(row=1, column=col_idx, value=col_name)
+                cell.font = header_font
+                cell.fill = header_fill
+                cell.alignment = header_align
+                cell.border = thin_border
+
+            start_row = 2
 
         # Write Rows
-        for row_idx, job in enumerate(jobs, start=2):
+        for offset, job in enumerate(jobs):
+            row_idx = start_row + offset
             ws.row_dimensions[row_idx].height = 42
             row_data = job.to_row()
             

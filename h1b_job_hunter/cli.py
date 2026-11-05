@@ -36,6 +36,7 @@ def main():
     run_parser = subparsers.add_parser("run", aliases=["search"], help="Execute daily job discovery pipeline")
     run_parser.add_argument("-n", "--limit", type=int, default=50, help="Number of verified roles to export (default: 50)")
     run_parser.add_argument("-o", "--output", type=str, default=None, help="Output Excel file path")
+    run_parser.add_argument("--append", action="store_true", help="Append evaluated jobs to existing output Excel file instead of overwriting")
     run_parser.add_argument("--allow-existing-companies", action="store_true", help="Allow new roles at previously applied companies")
     run_parser.add_argument("--concurrency", type=int, default=15, help="Async request concurrency limit")
 
@@ -61,11 +62,13 @@ def main():
         out_path = Path(args.output) if getattr(args, "output", None) else None
         allow_existing = getattr(args, "allow_existing_companies", False)
         concurrency = getattr(args, "concurrency", 15)
+        append_mode = getattr(args, "append", False)
 
         print("\n" + "="*70)
         print("  H-1B JOB HUNTER: AUTONOMOUS AI ENGINEERING DISCOVERY ENGINE")
         print("="*70)
         print(f"[*] Target Roles Limit:     {limit}")
+        print(f"[*] Export Mode:            {'Append to existing Excel' if append_mode else 'Overwrite Excel'}")
         print(f"[*] Deduplication Mode:     {'Strict (Reject applied companies)' if not allow_existing else 'Permissive (Allow applied companies with new URLs)'}")
         print(f"[*] Concurrency Limit:      {concurrency}")
         print(f"[*] Database Path:          {DB_PATH}")
@@ -78,7 +81,7 @@ def main():
         )
 
         async def _execute():
-            jobs, metrics, saved_path = await pipeline.run(target_count=limit, output_file=out_path)
+            jobs, metrics, saved_path = await pipeline.run(target_count=limit, output_file=out_path, append=append_mode)
             
             duration = (metrics.completed_at - metrics.started_at).total_seconds() if metrics.completed_at else 0
             

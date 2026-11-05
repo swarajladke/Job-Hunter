@@ -45,6 +45,7 @@ class DatabaseManager:
         self.db_path = Path(db_path)
         self._applied_companies_cache = None
         self._applied_links_cache = None
+        self._cooldown_cache = None
         self.init_db()
 
     def _get_connection(self) -> sqlite3.Connection:
@@ -53,7 +54,7 @@ class DatabaseManager:
         return conn
 
     def _load_caches(self) -> None:
-        """Preload applied companies and links into in-memory sets for O(1) lookups."""
+        """Preload applied companies, links, and cooldowns into in-memory sets for O(1) lookups."""
         with self._get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute("SELECT company_norm FROM applied_companies")
@@ -68,6 +69,11 @@ class DatabaseManager:
             for row in cursor.fetchall():
                 if row[0]:
                     self._applied_links_cache.add(normalize_job_url(row[0]))
+
+            cursor.execute("SELECT company_norm, original_name, cooldown_date, cooldown_days, reason FROM cooldown_registry")
+            self._cooldown_cache = {
+                row[0]: (row[1], row[2], row[3], row[4]) for row in cursor.fetchall()
+            }
 
     def init_db(self) -> None:
         """Create database tables and indexes if they do not exist."""
@@ -164,30 +170,23 @@ class DatabaseManager:
         if not company:
             return False, None
         
+        if self._cooldown_cache is None:
+            self._load_caches()
+
         norm = normalize_company_name(company)
         now = check_date or datetime.utcnow()
-        
-        with self._get_connection() as conn:
-            cursor = conn.cursor()
-            cursor.execute("""
-                SELECT original_name, cooldown_date, cooldown_days, reason 
-                FROM cooldown_registry 
-                WHERE company_norm = ? OR ? LIKE '%' || company_norm || '%'
-            """, (norm, norm))
-            row = cursor.fetchone()
-            
-            if row:
+
+        for cd_norm, (orig_name, cd_date_str, days, reason) in self._cooldown_cache.items():
+            if norm == cd_norm or cd_norm in norm:
                 try:
-                    c_date = datetime.fromisoformat(row["cooldown_date"].split(" ")[0])
+                    c_date = datetime.fromisoformat(cd_date_str.split(" ")[0])
                 except Exception:
-                    c_date = datetime.strptime(row["cooldown_date"].split(" ")[0], "%Y-%m-%d")
-                    
-                days = row["cooldown_days"]
+                    c_date = datetime.strptime(cd_date_str.split(" ")[0], "%Y-%m-%d")
+                
                 expiry = c_date + timedelta(days=days)
                 if now < expiry:
-                    reason = f"Cooldown active until {expiry.strftime('%Y-%m-%d')} ({row['reason']})"
-                    return True, reason
-        
+                    return True, f"Cooldown active until {expiry.strftime('%Y-%m-%d')} ({reason})"
+
         return False, None
 
     def is_company_applied(self, company: str) -> bool:

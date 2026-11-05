@@ -90,3 +90,4 @@ h1b-job-hunter stats
 ├── setup.py                 # Package setup configuration
 └── README.md
 ```
+
