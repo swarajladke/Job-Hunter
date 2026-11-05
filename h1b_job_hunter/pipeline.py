@@ -138,6 +138,39 @@ class JobHunterPipeline:
         evaluated: List[EvaluatedJob] = []
         company_counts: Dict[str, int] = {}
 
+        def is_fde(title: str) -> bool:
+            t = (title or "").lower()
+            return "forward deployed" in t or "fde" in t
+
+        # Strict FDE ratio: 5 to 10 out of 50 (10% to 20% max)
+        max_fde = min(10, max(5, int(target_count * 0.20))) if target_count <= 50 else int(target_count * 0.20)
+        current_fde = 0
+        company_fde_counts: Dict[str, int] = {}
+        MAX_FDE_PER_COMPANY = 2
+
+        def can_add_job(j: RawJob, company_cap: int) -> bool:
+            nonlocal current_fde
+            c_norm = normalize_company_name(j.company)
+            if company_counts.get(c_norm, 0) >= company_cap:
+                return False
+            if is_fde(j.title):
+                if current_fde >= max_fde:
+                    return False
+                if company_fde_counts.get(c_norm, 0) >= MAX_FDE_PER_COMPANY:
+                    return False
+            return True
+
+        def add_job(j: RawJob):
+            nonlocal current_fde
+            c_norm = normalize_company_name(j.company)
+            poc_info = poc_map.get(c_norm)
+            eval_job = self.evaluator.evaluate_job(j, batch_id=batch, poc_override=poc_info)
+            evaluated.append(eval_job)
+            company_counts[c_norm] = company_counts.get(c_norm, 0) + 1
+            if is_fde(j.title):
+                current_fde += 1
+                company_fde_counts[c_norm] = company_fde_counts.get(c_norm, 0) + 1
+
         # Split verified jobs: prioritize unapplied companies (0 prior applications)
         unapplied_jobs: List[RawJob] = []
         applied_company_jobs: List[RawJob] = []
@@ -150,12 +183,8 @@ class JobHunterPipeline:
 
         # Stage 1: Prioritize companies with 0 prior applications in tracking sheets
         for j in unapplied_jobs:
-            c_norm = normalize_company_name(j.company)
-            if company_counts.get(c_norm, 0) < MAX_ROLES_PER_COMPANY:
-                poc_info = poc_map.get(c_norm)
-                eval_job = self.evaluator.evaluate_job(j, batch_id=batch, poc_override=poc_info)
-                evaluated.append(eval_job)
-                company_counts[c_norm] = company_counts.get(c_norm, 0) + 1
+            if can_add_job(j, MAX_ROLES_PER_COMPANY):
+                add_job(j)
                 if len(evaluated) >= target_count:
                     break
 
@@ -163,12 +192,8 @@ class JobHunterPipeline:
         # strictly enforcing MAX_ROLES_PER_COMPANY = 2
         if len(evaluated) < target_count and self.allow_existing_companies:
             for j in applied_company_jobs:
-                c_norm = normalize_company_name(j.company)
-                if company_counts.get(c_norm, 0) < MAX_ROLES_PER_COMPANY:
-                    poc_info = poc_map.get(c_norm)
-                    eval_job = self.evaluator.evaluate_job(j, batch_id=batch, poc_override=poc_info)
-                    evaluated.append(eval_job)
-                    company_counts[c_norm] = company_counts.get(c_norm, 0) + 1
+                if can_add_job(j, MAX_ROLES_PER_COMPANY):
+                    add_job(j)
                     if len(evaluated) >= target_count:
                         break
 
@@ -179,12 +204,8 @@ class JobHunterPipeline:
             for cap_limit in (5, 7, 10, 15, 20):
                 for j in all_remaining:
                     if j.url not in [e.job_posting_link for e in evaluated]:
-                        c_norm = normalize_company_name(j.company)
-                        if company_counts.get(c_norm, 0) < cap_limit:
-                            poc_info = poc_map.get(c_norm)
-                            eval_job = self.evaluator.evaluate_job(j, batch_id=batch, poc_override=poc_info)
-                            evaluated.append(eval_job)
-                            company_counts[c_norm] = company_counts.get(c_norm, 0) + 1
+                        if can_add_job(j, cap_limit):
+                            add_job(j)
                             if len(evaluated) >= target_count:
                                 break
                 if len(evaluated) >= target_count:
