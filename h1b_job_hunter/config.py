@@ -37,7 +37,9 @@ SALARY_FLOOR_USD: float = 150000.0
 # All future scraping, filtering, and export for these companies is permanently halted.
 BLOCKED_COMPANIES: Set[str] = {
     "cloudflare",
-    "databricks"
+    "databricks",
+    "decagon",
+    "applied intuition"
 }
 
 # Initial cooldowns & parameters
@@ -46,12 +48,15 @@ INITIAL_COOLDOWNS: Dict[str, int] = {
     "sierra": 60,
     "capital one": 60,
     "cloudflare": 365,
-    "databricks": 365
+    "databricks": 365,
+    "decagon": 365,
+    "applied intuition": 365
 }
 DEFAULT_COOLDOWN_DAYS: int = 60
 
 # Role Inclusions (Title Keywords) - Focused strictly on Software/AI Engineering, Agentic AI, and Full Stack
 ROLE_INCLUSIONS: List[str] = [
+    # Core AI Engineering & Agentic Roles
     "ai engineer",
     "software developer (ai)",
     "software developer - ai",
@@ -59,6 +64,52 @@ ROLE_INCLUSIONS: List[str] = [
     "software engineer (ai)",
     "software engineer - ai",
     "software engineer, ai",
+    "agentic ai developer",
+    "agentic ai engineer",
+    "agentic",
+    "ai developer",
+    "software engineer, agents",
+    "software engineer - agents",
+    "software engineer, agent",
+    "software engineer - agent",
+    "applied ai engineer",
+    "applied ai",
+    "llm engineer",
+    "generative ai engineer",
+    "genai engineer",
+    "ai systems engineer",
+    "ai platform engineer",
+    "ai platform",
+    "ai backend engineer",
+    "ai infrastructure engineer",
+    "ai infra",
+    "ai software engineer",
+    "ai applications engineer",
+    "software engineer - ai applications",
+    "software engineer, ai applications",
+    "software engineer - generative ai",
+    "software engineer, generative ai",
+    "software engineer - applied ai",
+    "software engineer, applied ai",
+    "software engineer (applied ai)",
+    "software engineer - ai agents",
+    "software engineer, ai agents",
+    "software engineer, ai/ml",
+    "software engineer - ai/ml",
+    "software engineer (ai/ml)",
+    "ai/ml software engineer",
+    "machine learning software engineer",
+    "ai native",
+
+    # AI-coupled Backend Roles
+    "backend software engineer, ai",
+    "backend engineer, ai",
+    "backend engineer - ai",
+    "backend engineer (ai)",
+    "backend engineer, ai/ml",
+    "backend software engineer, ai/ml",
+
+    # Full-Stack Engineering (Candidate's Amdocs/Capgemini React/Redux + Java microservices edge)
     "full stack developer (ai)",
     "full stack developer - ai",
     "full stack engineer (ai)",
@@ -80,64 +131,26 @@ ROLE_INCLUSIONS: List[str] = [
     "software engineer, fullstack",
     "software engineer - fullstack",
     "software engineer (fullstack)",
-    "software engineer, backend",
-    "software engineer - backend",
-    "software engineer (backend)",
-    "software engineer, platform",
-    "software engineer - platform",
-    "software engineer (platform)",
-    "software engineer, infrastructure",
-    "software engineer - infrastructure",
-    "backend software engineer, ai",
-    "backend engineer, ai",
-    "backend engineer - ai",
-    "backend software engineer",
-    "backend engineer",
-    "agentic ai developer",
-    "agentic ai engineer",
-    "agentic",
-    "ai developer",
-    "software engineer, agents",
-    "software engineer - agents",
-    "software engineer, agent",
-    "software engineer - agent",
+    "ai full stack engineer",
+    "ai fullstack engineer",
+
+    # Forward Deployed Roles (Strictly capped at 5-10 per 50)
     "forward deployed engineer (ai)",
     "forward deployed engineer",
     "forward deployed ai",
     "forward deployed software engineer",
-    "forward deployed",
-    "applied ai engineer",
-    "applied ai",
-    "llm engineer",
-    "generative ai engineer",
-    "genai engineer",
-    "ai systems engineer",
-    "ai platform engineer",
-    "ai backend engineer",
-    "ai infrastructure engineer",
-    "ai infra",
-    "ai software engineer",
-    "ai applications engineer",
-    "software engineer - ai applications",
-    "software engineer, ai applications",
-    "software engineer - generative ai",
-    "software engineer, generative ai",
-    "software engineer - applied ai",
-    "software engineer, applied ai",
-    "software engineer (applied ai)",
-    "software engineer - ai agents",
-    "software engineer, ai agents",
-    "backend engineer, ai/ml",
-    "backend software engineer, ai/ml",
-    "ai full stack engineer",
-    "ai fullstack engineer",
-    "machine learning software engineer",
-    "software engineer, ai/ml",
-    "software engineer - ai/ml",
-    "software engineer (ai/ml)",
-    "ai/ml software engineer",
-    "ai native",
-    "ai platform"
+    "forward deployed"
+]
+
+# Mobile & Native Platform Exclusions (Rishabh is an AI/Full-Stack engineer, not mobile)
+MOBILE_EXCLUSIONS: List[str] = [
+    "android",
+    "ios",
+    "mobile",
+    "swift",
+    "kotlin",
+    "flutter",
+    "react native"
 ]
 
 # Role Exclusions (Strict Negatives)

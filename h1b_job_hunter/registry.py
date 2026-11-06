@@ -145,11 +145,11 @@ KNOWN_ATS_BOARDS = [
     ("lever", "veeva", "Veeva Systems", "Enterprise SaaS / Life Sciences", "Tier 2", "Veeva Talent | careers@veeva.com | https://veeva.com"),
     ("greenhouse", "sofi", "SoFi", "Fintech / AI", "Tier 2", "SoFi Talent | careers@sofi.org | https://sofi.com"),
     ("greenhouse", "waymo", "Waymo", "Autonomous Vehicles / AI", "Tier 1", "Waymo Talent | careers@waymo.com | https://waymo.com"),
-    ("ashby", "applied", "Applied Intuition", "Autonomous Vehicles / AI", "Unicorn", "Applied Intuition Talent | careers@appliedintuition.com | https://appliedintuition.com"),
+    # ("ashby", "applied", "Applied Intuition", "Autonomous Vehicles / AI", "Unicorn", "Applied Intuition Talent | careers@appliedintuition.com | https://appliedintuition.com"),  # Blocked: quota reached
     ("ashby", "lemonade", "Lemonade", "InsurTech / AI", "InsurTech", "Lemonade Talent | careers@lemonade.com | https://lemonade.com"),
     ("ashby", "hebbia", "Hebbia", "Enterprise AI Search", "Unicorn", "Hebbia Talent | careers@hebbia.ai | https://hebbia.ai"),
     ("ashby", "tavus", "Tavus", "Generative Video / AI", "Unicorn", "Tavus Talent | careers@tavus.io | https://tavus.io"),
-    ("ashby", "decagon", "Decagon", "AI Agents", "Unicorn", "Decagon Talent | careers@decagon.ai | https://decagon.ai"),
+    # ("ashby", "decagon", "Decagon", "AI Agents", "Unicorn", "Decagon Talent | careers@decagon.ai | https://decagon.ai"),  # Blocked: quota reached
     ("ashby", "normai", "Norm AI", "Regulatory AI / Compliance", "Unicorn", "Norm AI Talent | careers@norm.ai | https://norm.ai"),
     ("ashby", "vapi", "Vapi", "Voice AI Agents", "Unicorn", "Vapi Talent | careers@vapi.ai | https://vapi.ai"),
     ("ashby", "suno", "Suno", "AI Audio / Music", "Unicorn", "Suno Talent | careers@suno.ai | https://suno.ai"),

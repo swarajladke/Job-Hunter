@@ -10,6 +10,7 @@ from .config import (
     DEFENSE_FEDERAL_EXCLUSIONS,
     HEAVY_ML_EXCLUSIONS,
     DEVOPS_EXCLUSIONS,
+    MOBILE_EXCLUSIONS,
     NON_US_LOCATIONS,
     CLEARANCE_KEYWORDS,
     SALARY_FLOOR_USD,
@@ -50,6 +51,11 @@ class JobFilterEngine:
         
         if not matched_title:
             return FilterResult(job=job, is_passed=False, rejection_reason=f"TITLE_NOT_INCLUDED: '{job.title}' does not match target roles")
+
+        # 1b. Mobile / Android / iOS Exclusions (Candidate is AI/Full-Stack SWE, not mobile)
+        for mob in MOBILE_EXCLUSIONS:
+            if re.search(r'\b' + re.escape(mob) + r'\b', title_lower):
+                return FilterResult(job=job, is_passed=False, rejection_reason=f"EXCLUDED_MOBILE: Found '{mob}' in title")
 
         # 2. Cooldown Registry Check (In-memory cache lookup)
         on_cd, cd_reason = self.db.is_company_on_cooldown(job.company)
