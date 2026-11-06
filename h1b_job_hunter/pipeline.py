@@ -31,10 +31,10 @@ class JobHunterPipeline:
         self.concurrency = concurrency
         
         # Connectors
-        self.ashby = AshbyConnector(timeout=7.0)
-        self.greenhouse = GreenhouseConnector(timeout=7.0)
-        self.lever = LeverConnector(timeout=7.0)
-        self.workday = WorkdayConnector(timeout=7.0)
+        self.ashby = AshbyConnector(timeout=12.0)
+        self.greenhouse = GreenhouseConnector(timeout=14.0)
+        self.lever = LeverConnector(timeout=10.0)
+        self.workday = WorkdayConnector(timeout=4.0)
         
         # Engine components
         self.filter_engine = JobFilterEngine(self.db, allow_existing_companies=allow_existing_companies)
@@ -64,21 +64,22 @@ class JobHunterPipeline:
         poc_map: Dict[str, str] = {}
         
         sem = asyncio.Semaphore(self.concurrency)
-        async with httpx.AsyncClient(follow_redirects=True) as client:
+        timeout_cfg = httpx.Timeout(15.0, connect=6.0)
+        async with httpx.AsyncClient(follow_redirects=True, timeout=timeout_cfg) as client:
             
             async def fetch_board(ats: str, token: str, comp_name: str, cat: str, tier: str, poc: str, *args):
                 async with sem:
                     poc_map[normalize_company_name(comp_name)] = poc
                     try:
                         if ats == "ashby":
-                            return await self.ashby.fetch_jobs(token, comp_name, client)
+                            return await asyncio.wait_for(self.ashby.fetch_jobs(token, comp_name, client), timeout=14.0)
                         elif ats == "greenhouse":
-                            return await self.greenhouse.fetch_jobs(token, comp_name, client)
+                            return await asyncio.wait_for(self.greenhouse.fetch_jobs(token, comp_name, client), timeout=15.0)
                         elif ats == "lever":
-                            return await self.lever.fetch_jobs(token, comp_name, client)
+                            return await asyncio.wait_for(self.lever.fetch_jobs(token, comp_name, client), timeout=12.0)
                         elif ats == "workday":
                             site = args[0] if args else "External"
-                            return await self.workday.fetch_jobs(token, comp_name, client, site=site)
+                            return await asyncio.wait_for(self.workday.fetch_jobs(token, comp_name, client, site=site), timeout=6.0)
                     except Exception:
                         pass
                     return []
@@ -208,7 +209,7 @@ class JobHunterPipeline:
         # to guarantee the full target verified roles while strictly preventing single-company flooding
         if len(evaluated) < target_count:
             all_remaining = unapplied_jobs + (applied_company_jobs if self.allow_existing_companies else [])
-            for cap_limit in (5, 7, 10, 15, 20):
+            for cap_limit in (5, 7, 10, 15, 20, 25, 30):
                 for j in all_remaining:
                     if j.url not in [e.job_posting_link for e in evaluated]:
                         if can_add_job(j, cap_limit):

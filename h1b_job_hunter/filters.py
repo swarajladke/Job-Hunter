@@ -72,6 +72,9 @@ class JobFilterEngine:
 
         # 5. Strict Negative: Seniority & Leveling
         for sen in SENIORITY_EXCLUSIONS:
+            # Exception: 'member of technical staff' is a standard IC title at AI labs, not a staff-plus title
+            if sen == "staff" and ("member of technical staff" in title_lower or "technical staff" in title_lower):
+                continue
             # Word boundary matching to avoid false positives (e.g., 'leadership' vs 'lead')
             if re.search(r'\b' + re.escape(sen) + r'\b', title_lower):
                 return FilterResult(job=job, is_passed=False, rejection_reason=f"EXCLUDED_SENIORITY: Found '{sen}' in title")
