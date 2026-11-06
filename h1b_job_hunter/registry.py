@@ -79,8 +79,8 @@ KNOWN_ATS_BOARDS = [
     ("greenhouse", "scaleai", "Scale AI", "AI Labs / Data", "Tier 2", "Scale AI Recruiting | recruiting@scale.com | https://scale.com"),
     ("ashby", "cohere", "Cohere", "AI Labs / LLMs", "Tier 2", "Cohere Talent | talent@cohere.com | https://cohere.com"),
     ("greenhouse", "figma", "Figma", "Design AI", "Tier 2", "Figma Recruiting | recruiting@figma.com | https://figma.com"),
-    ("greenhouse", "cloudflare", "Cloudflare", "Workers AI / Edge", "Tier 2", "Cloudflare Talent | recruiting@cloudflare.com | https://cloudflare.com"),
-    ("greenhouse", "databricks", "Databricks", "Mosaic AI / Lakehouse", "Tier 1", "Databricks Talent | careers@databricks.com | https://databricks.com"),
+    # ("greenhouse", "cloudflare", "Cloudflare", "Workers AI / Edge", "Tier 2", "Cloudflare Talent | recruiting@cloudflare.com | https://cloudflare.com"),  # Blocked: quota reached (~50 applications)
+    # ("greenhouse", "databricks", "Databricks", "Mosaic AI / Lakehouse", "Tier 1", "Databricks Talent | careers@databricks.com | https://databricks.com"),  # Blocked: quota reached (~50 applications)
     ("greenhouse", "mongodb", "MongoDB", "Vector DB / Data", "Tier 2", "MongoDB Recruiting | recruiting@mongodb.com | https://mongodb.com"),
     ("greenhouse", "elastic", "Elastic", "Search & Retrieval AI", "Tier 2", "Elastic Talent | careers@elastic.co | https://elastic.co"),
     ("greenhouse", "confluent", "Confluent", "Streaming AI / Kafka", "Tier 2", "Confluent Talent | recruiting@confluent.io | https://confluent.io"),

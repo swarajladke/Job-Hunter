@@ -6,7 +6,7 @@ from typing import List, Dict, Any, Optional
 import httpx
 
 from .models import RawJob, FilterResult, EvaluatedJob, RunMetrics
-from .config import DB_PATH, DEFAULT_TRACKERS
+from .config import DB_PATH, DEFAULT_TRACKERS, BLOCKED_COMPANIES
 from .registry import KNOWN_ATS_BOARDS
 from .database import DatabaseManager, normalize_company_name
 from .ingestion import TrackerIngestion
@@ -83,7 +83,14 @@ class JobHunterPipeline:
                         pass
                     return []
 
-            tasks = [fetch_board(*board_spec) for board_spec in KNOWN_ATS_BOARDS]
+            # Filter out blocked companies (e.g. Cloudflare, Databricks)
+            active_boards = [
+                b for b in KNOWN_ATS_BOARDS
+                if normalize_company_name(b[2]) not in BLOCKED_COMPANIES
+                and b[1].lower() not in BLOCKED_COMPANIES
+            ]
+
+            tasks = [fetch_board(*board_spec) for board_spec in active_boards]
             metrics.boards_queried = len(tasks)
             board_results = await asyncio.gather(*tasks, return_exceptions=True)
 

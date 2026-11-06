@@ -12,7 +12,8 @@ from .config import (
     DEVOPS_EXCLUSIONS,
     NON_US_LOCATIONS,
     CLEARANCE_KEYWORDS,
-    SALARY_FLOOR_USD
+    SALARY_FLOOR_USD,
+    BLOCKED_COMPANIES
 )
 from .database import DatabaseManager, normalize_company_name
 from .registry import is_tier1_tier2
@@ -29,6 +30,16 @@ class JobFilterEngine:
     def evaluate(self, job: RawJob) -> FilterResult:
         """Run all filter checks in order of computational efficiency."""
         
+        # 0. Blocked Companies Check (Application quota reached e.g. Cloudflare, Databricks)
+        comp_norm = normalize_company_name(job.company)
+        for blocked in BLOCKED_COMPANIES:
+            if blocked in comp_norm or comp_norm in blocked:
+                return FilterResult(
+                    job=job,
+                    is_passed=False,
+                    rejection_reason=f"BLOCKED_COMPANY: Application quota reached for '{job.company}' (~50 applications reached)"
+                )
+
         # 1. Title Inclusion Check (Fastest in-memory check: drops ~90% non-AI roles instantly)
         title_lower = job.title.lower()
         matched_title = None

@@ -32,11 +32,21 @@ EXCEL_COLUMNS: List[str] = [
 # Compensation Floor
 SALARY_FLOOR_USD: float = 150000.0
 
+# Hard Company Exclusions / Application Quota Ceilings
+# Companies where the candidate has reached application ceilings (e.g. ~50 applications)
+# All future scraping, filtering, and export for these companies is permanently halted.
+BLOCKED_COMPANIES: Set[str] = {
+    "cloudflare",
+    "databricks"
+}
+
 # Initial cooldowns & parameters
 INITIAL_COOLDOWNS: Dict[str, int] = {
     "openai": 60,
     "sierra": 60,
-    "capital one": 60
+    "capital one": 60,
+    "cloudflare": 365,
+    "databricks": 365
 }
 DEFAULT_COOLDOWN_DAYS: int = 60
 
@@ -61,6 +71,23 @@ ROLE_INCLUSIONS: List[str] = [
     "full-stack engineer",
     "full-stack software engineer",
     "full-stack developer",
+    "software engineer, full-stack",
+    "software engineer - full-stack",
+    "software engineer (full-stack)",
+    "software engineer, full stack",
+    "software engineer - full stack",
+    "software engineer (full stack)",
+    "software engineer, fullstack",
+    "software engineer - fullstack",
+    "software engineer (fullstack)",
+    "software engineer, backend",
+    "software engineer - backend",
+    "software engineer (backend)",
+    "software engineer, platform",
+    "software engineer - platform",
+    "software engineer (platform)",
+    "software engineer, infrastructure",
+    "software engineer - infrastructure",
     "backend software engineer, ai",
     "backend engineer, ai",
     "backend engineer - ai",
@@ -239,7 +266,10 @@ NON_US_LOCATIONS: List[str] = [
     "netherlands", "amsterdam", "spain", "madrid", "barcelona", "switzerland", "zurich",
     "israel", "tel aviv", "poland", "warsaw", "brazil", "sao paulo", "mexico", "argentina",
     "japan", "tokyo", "south korea", "seoul", "china", "beijing", "shanghai",
-    "sweden", "stockholm", "norway", "oslo", "denmark", "copenhagen", "finland", "helsinki"
+    "sweden", "stockholm", "norway", "oslo", "denmark", "copenhagen", "finland", "helsinki",
+    "lithuania", "vilnius", "estonia", "tallinn", "latvia", "riga", "czech", "prague",
+    "austria", "vienna", "belgium", "brussels", "italy", "rome", "milan", "portugal", "lisbon",
+    "hungary", "budapest", "romania", "bucharest"
 ]
 
 # Security Clearance Exclusions
