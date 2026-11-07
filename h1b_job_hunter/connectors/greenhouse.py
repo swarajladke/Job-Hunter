@@ -13,9 +13,9 @@ def parse_salary_from_text(text: str) -> tuple[Optional[float], Optional[float],
     if not text:
         return None, None, None
 
-    # Matches: $160,000 - $240,000 or $160k - $240k or $160,000 to $240,000
+    # Matches: $160,000 - $240,000 or $160k - $240k or $160k - 240k or $160,000 to $240,000
     range_match = re.search(
-        r'\$\s*([0-9]{2,3}(?:,[0-9]{3})*(?:\.[0-9]{2})?|[0-9]{2,3}k)\s*(?:-|–|—|to)\s*\$\s*([0-9]{2,3}(?:,[0-9]{3})*(?:\.[0-9]{2})?|[0-9]{2,3}k)',
+        r'\$\s*([0-9]{2,3}k|[0-9]{2,3}(?:,[0-9]{3})*(?:\.[0-9]{2})?)\s*(?:-|–|—|to)\s*\$?\s*([0-9]{2,3}k|[0-9]{2,3}(?:,[0-9]{3})*(?:\.[0-9]{2})?)',
         text,
         re.IGNORECASE
     )

@@ -50,10 +50,10 @@ INSURANCE_EDGE_COMPANIES: Set[str] = {
 KNOWN_ATS_BOARDS = [
     # --- ASHBY TARGETS ---
     ("ashby", "ramp", "Ramp", "Fintech / AI", "Tier 2", "Ramp Recruiting Team | recruiting@ramp.com | https://ramp.com/careers"),
-    ("ashby", "elevenlabs", "ElevenLabs", "AI Labs / Voice", "Unicorn", "ElevenLabs Talent | hiring@elevenlabs.io | https://elevenlabs.io/careers"),
+    # ("ashby", "elevenlabs", "ElevenLabs", "AI Labs / Voice", "Unicorn", "ElevenLabs Talent | hiring@elevenlabs.io | https://elevenlabs.io/careers"),  # Blocked: quota reached
     ("ashby", "cursor", "Anysphere (Cursor)", "AI Developer Tools", "Unicorn", "Cursor Team | founders@anysphere.co | https://cursor.com"),
     ("ashby", "poolside", "Poolside", "AI Labs", "Unicorn", "Poolside Talent | careers@poolside.ai | https://poolside.ai"),
-    ("ashby", "cognition", "Cognition (Devin)", "AI Labs / Coding", "Unicorn", "Cognition Hiring | jobs@cognition-labs.com | https://cognition.ai"),
+    # ("ashby", "cognition", "Cognition (Devin)", "AI Labs / Coding", "Unicorn", "Cognition Hiring | jobs@cognition-labs.com | https://cognition.ai"),  # Blocked: quota reached
     ("ashby", "baseten", "Baseten", "AI Infra", "Unicorn", "Baseten Recruiting | talent@baseten.co | https://baseten.co"),
     ("ashby", "modal", "Modal Labs", "Cloud / AI Infra", "Unicorn", "Modal Talent | hiring@modal.com | https://modal.com"),
     ("ashby", "fireworks", "Fireworks AI", "AI Inference Cloud", "Unicorn", "Fireworks Talent | careers@fireworks.ai | https://fireworks.ai"),
@@ -78,8 +78,8 @@ KNOWN_ATS_BOARDS = [
     ("ashby", "cartesia", "Cartesia", "Voice AI / Multimodal", "Growth", "Cartesia Hiring | jobs@cartesia.ai | https://cartesia.ai"),
 
     # --- GREENHOUSE TARGETS ---
-    ("greenhouse", "scaleai", "Scale AI", "AI Labs / Data", "Tier 2", "Scale AI Recruiting | recruiting@scale.com | https://scale.com"),
-    ("ashby", "cohere", "Cohere", "AI Labs / LLMs", "Tier 2", "Cohere Talent | talent@cohere.com | https://cohere.com"),
+    # ("greenhouse", "scaleai", "Scale AI", "AI Labs / Data", "Tier 2", "Scale AI Recruiting | recruiting@scale.com | https://scale.com"),  # Blocked: quota reached
+    # ("ashby", "cohere", "Cohere", "AI Labs / LLMs", "Tier 2", "Cohere Talent | talent@cohere.com | https://cohere.com"),  # Blocked: quota reached
     ("greenhouse", "figma", "Figma", "Design AI", "Tier 2", "Figma Recruiting | recruiting@figma.com | https://figma.com"),
     # ("greenhouse", "cloudflare", "Cloudflare", "Workers AI / Edge", "Tier 2", "Cloudflare Talent | recruiting@cloudflare.com | https://cloudflare.com"),  # Blocked: quota reached (~50 applications)
     # ("greenhouse", "databricks", "Databricks", "Mosaic AI / Lakehouse", "Tier 1", "Databricks Talent | careers@databricks.com | https://databricks.com"),  # Blocked: quota reached (~50 applications)
@@ -120,12 +120,12 @@ KNOWN_ATS_BOARDS = [
     ("greenhouse", "reddit", "Reddit", "Search / Recommendations", "Tier 2", "Reddit Recruiting | careers@redditinc.com | https://redditinc.com"),
     ("greenhouse", "pinterest", "Pinterest", "Visual Search / GenAI", "Tier 2", "Pinterest Recruiting | careers@pinterest.com | https://pinterest.com"),
     ("greenhouse", "toast", "Toast", "Restaurant SaaS ML", "Tier 2", "Toast Talent | careers@toasttab.com | https://toasttab.com"),
-    ("greenhouse", "scaleai", "Scale AI", "AI Data & Platforms", "Unicorn", "Scale AI Talent | careers@scale.com | https://scale.com"),
+    # ("greenhouse", "scaleai", "Scale AI", "AI Data & Platforms", "Unicorn", "Scale AI Talent | careers@scale.com | https://scale.com"),  # Blocked: quota reached
     ("greenhouse", "abacus", "Abacus.AI", "Enterprise GenAI / Agents", "Unicorn", "Abacus Talent | careers@abacus.ai | https://abacus.ai"),
     ("greenhouse", "tavily", "Tavily", "AI Search & Agents", "Unicorn", "Tavily Talent | careers@tavily.com | https://tavily.com"),
     ("greenhouse", "moveworks", "Moveworks", "Enterprise Conversational AI", "Unicorn", "Moveworks Talent | careers@moveworks.ai | https://moveworks.com"),
     ("greenhouse", "workato", "Workato", "Enterprise Automation AI", "Unicorn", "Workato Talent | careers@workato.com | https://workato.com"),
-    ("greenhouse", "stripe", "Stripe", "Payments ML / Radar", "Tier 1", "Stripe Recruiting | recruiting@stripe.com | https://stripe.com"),
+    # ("greenhouse", "stripe", "Stripe", "Payments ML / Radar", "Tier 1", "Stripe Recruiting | recruiting@stripe.com | https://stripe.com"),  # Blocked: quota reached
     ("greenhouse", "dbtlabs", "dbt Labs", "Analytics / AI Data", "Tier 2", "dbt Labs Talent | jobs@dbtlabs.com | https://getdbt.com"),
     ("greenhouse", "snapsheet", "Snapsheet", "Insurance Tech / Claims AI", "InsurTech", "Snapsheet Recruiting | hr@snapsheet.me | https://snapsheet.com"),
     ("greenhouse", "lemonade", "Lemonade", "AI Insurance", "InsurTech", "Lemonade Talent | jobs@lemonade.com | https://lemonade.com"),
@@ -146,7 +146,7 @@ KNOWN_ATS_BOARDS = [
     ("lever", "atlassian", "Atlassian", "Atlassian Intelligence / Rovo", "Tier 2", "Atlassian Talent | careers@atlassian.com | https://atlassian.com"),
 
     # --- ADDITIONAL UNAPPLIED SPONSORS & LABS ---
-    ("greenhouse", "coreweave", "CoreWeave", "AI Labs / Cloud", "Unicorn", "CoreWeave Talent | careers@coreweave.com | https://coreweave.com"),
+    # ("greenhouse", "coreweave", "CoreWeave", "AI Labs / Cloud", "Unicorn", "CoreWeave Talent | careers@coreweave.com | https://coreweave.com"),  # Blocked: quota reached
     ("lever", "veeva", "Veeva Systems", "Enterprise SaaS / Life Sciences", "Tier 2", "Veeva Talent | careers@veeva.com | https://veeva.com"),
     ("greenhouse", "sofi", "SoFi", "Fintech / AI", "Tier 2", "SoFi Talent | careers@sofi.org | https://sofi.com"),
     ("greenhouse", "waymo", "Waymo", "Autonomous Vehicles / AI", "Tier 1", "Waymo Talent | careers@waymo.com | https://waymo.com"),

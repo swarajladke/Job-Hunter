@@ -39,7 +39,17 @@ BLOCKED_COMPANIES: Set[str] = {
     "cloudflare",
     "databricks",
     "decagon",
-    "applied intuition"
+    "applied intuition",
+    "cohere",
+    "elevenlabs",
+    "eleven labs",
+    "coreweave",
+    "scale ai",
+    "scaleai",
+    "stripe",
+    "cognition",
+    "cognition (devin)",
+    "cognition labs"
 }
 
 # Initial cooldowns & parameters
@@ -50,7 +60,17 @@ INITIAL_COOLDOWNS: Dict[str, int] = {
     "cloudflare": 365,
     "databricks": 365,
     "decagon": 365,
-    "applied intuition": 365
+    "applied intuition": 365,
+    "cohere": 365,
+    "elevenlabs": 365,
+    "eleven labs": 365,
+    "coreweave": 365,
+    "scale ai": 365,
+    "scaleai": 365,
+    "stripe": 365,
+    "cognition": 365,
+    "cognition (devin)": 365,
+    "cognition labs": 365
 }
 DEFAULT_COOLDOWN_DAYS: int = 60
 
@@ -132,8 +152,6 @@ ROLE_INCLUSIONS: List[str] = [
     "enterprise solutions engineer",
     "solutions engineer - usa",
     "solutions engineer, usa",
-    "member of technical staff",
-    "technical staff",
 
     # AI-coupled Backend Roles
     "backend software engineer, ai",
@@ -143,30 +161,16 @@ ROLE_INCLUSIONS: List[str] = [
     "backend engineer, ai/ml",
     "backend software engineer, ai/ml",
 
-    # Full-Stack Engineering (Candidate's Amdocs/Capgemini React/Redux + Java microservices edge)
+    # AI Full-Stack Engineering (Candidate's Amdocs/Capgemini React/Redux + Java microservices edge)
     "full stack developer (ai)",
     "full stack developer - ai",
     "full stack engineer (ai)",
     "full stack engineer - ai",
     "full stack engineer, ai",
-    "full stack software engineer",
-    "fullstack software engineer",
-    "fullstack engineer",
-    "full stack developer",
-    "full-stack engineer",
-    "full-stack software engineer",
-    "full-stack developer",
-    "software engineer, full-stack",
-    "software engineer - full-stack",
-    "software engineer (full-stack)",
-    "software engineer, full stack",
-    "software engineer - full stack",
-    "software engineer (full stack)",
-    "software engineer, fullstack",
-    "software engineer - fullstack",
-    "software engineer (fullstack)",
     "ai full stack engineer",
     "ai fullstack engineer",
+    "full stack engineer, agents",
+    "fullstack engineer, agents",
 
     # Forward Deployed Roles (Strictly capped at 5-10 per 50)
     "forward deployed engineer (ai)",
@@ -174,6 +178,13 @@ ROLE_INCLUSIONS: List[str] = [
     "forward deployed ai",
     "forward deployed software engineer",
     "forward deployed"
+]
+
+# MTS / Technical Staff Exclusions (Strict Negatives)
+MTS_EXCLUSIONS: List[str] = [
+    "member of technical staff",
+    "technical staff",
+    "mts"
 ]
 
 # Mobile & Native Platform Exclusions (Rishabh is an AI/Full-Stack engineer, not mobile)
